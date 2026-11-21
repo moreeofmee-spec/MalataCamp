@@ -1,0 +1,12 @@
+const modal=document.querySelector('#info');
+const content={imprint:['Imprint','This space is reserved for the organiser’s legal name, registered address and official contact details. Final information will be provided before launch.'],privacy:['Privacy notice','The organising team will provide the final privacy information here before the website begins collecting registrations or donations.'],accessibility:['Accessibility information','The final accessibility statement and contact information will be added here by the organising team.'],registration:['Your adventure is on the horizon.','Applications are not open yet. The organising team will share confirmed dates, eligibility criteria and the official registration link here.'],support:['Help make the next chapter happen.','Official partnership, donation and contact details will be added once confirmed by the organising team. No donations or personal information are collected in this preview.']};
+document.querySelectorAll('[data-dialog]').forEach(button=>button.addEventListener('click',()=>{const [title,copy]=content[button.dataset.dialog];document.querySelector('#dialog-title').textContent=title;document.querySelector('#dialog-copy').textContent=copy;modal.showModal()}));document.querySelectorAll('.close,.close-bottom').forEach(b=>b.addEventListener('click',()=>modal.close()));modal.addEventListener('click',e=>{if(e.target===modal){const r=modal.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)modal.close()}});
+const header=document.querySelector('#site-header');
+const toggle=document.querySelector('#menu-toggle');
+const menu=document.querySelector('#site-menu');
+function closeMenu(restoreFocus=false){menu.hidden=true;toggle.setAttribute('aria-expanded','false');if(restoreFocus)toggle.focus();}
+toggle.addEventListener('click',()=>{const opening=menu.hidden;menu.hidden=!opening;toggle.setAttribute('aria-expanded',String(opening));});
+menu.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{closeMenu();const target=link.hash?document.querySelector(link.hash):null;if(target){target.setAttribute('tabindex','-1');target.focus({preventScroll:true});}}));
+document.addEventListener('click',event=>{if(!header.contains(event.target))closeMenu();});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!menu.hidden)closeMenu(true);});
+header.addEventListener('focusout',()=>{requestAnimationFrame(()=>{if(!header.contains(document.activeElement))closeMenu();});});
